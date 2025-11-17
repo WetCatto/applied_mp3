@@ -478,12 +478,6 @@ with tab5:
 
 # Footer
 st.markdown("---")
-st.markdown("""
-**About this Dashboard:**
-- **Dataset**: CO2 Emission by Vehicles from Kaggle
-- **Features**: Interactive filters, visualizations, correlation analysis, and ML clustering
-- **Built with**: Streamlit, Plotly, Scikit-learn
-""")
 
 # Instructions in sidebar
 with st.sidebar:
