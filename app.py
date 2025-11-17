@@ -96,7 +96,7 @@ makes_list = sorted(df['Make'].unique())
 selected_makes = st.sidebar.multiselect(
     "Select Vehicle Make(s)",
     options=makes_list,
-    default=makes_list[:5] if len(makes_list) > 5 else makes_list
+    default=makes_list
 )
 
 # Vehicle class filter
@@ -159,29 +159,25 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric(
         "Avg CO2 Emissions",
-        f"{filtered_df['CO2_Emissions'].mean():.0f} g/km",
-        f"{filtered_df['CO2_Emissions'].mean() - df['CO2_Emissions'].mean():.0f}"
+        f"{filtered_df['CO2_Emissions'].mean():.0f} g/km"
     )
 
 with col2:
     st.metric(
         "Avg Engine Size",
-        f"{filtered_df['Engine_Size'].mean():.2f} L",
-        f"{filtered_df['Engine_Size'].mean() - df['Engine_Size'].mean():.2f}"
+        f"{filtered_df['Engine_Size'].mean():.2f} L"
     )
 
 with col3:
     st.metric(
         "Avg Fuel Consumption",
-        f"{filtered_df['Fuel_Consumption_Comb'].mean():.1f} L/100km",
-        f"{filtered_df['Fuel_Consumption_Comb'].mean() - df['Fuel_Consumption_Comb'].mean():.1f}"
+        f"{filtered_df['Fuel_Consumption_Comb'].mean():.1f} L/100km"
     )
 
 with col4:
     st.metric(
         "Vehicle Count",
-        len(filtered_df),
-        f"{len(filtered_df) - len(df)}"
+        len(filtered_df)
     )
 
 # Tabs for different views
