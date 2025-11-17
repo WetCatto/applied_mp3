@@ -74,6 +74,70 @@ def load_data():
 
 df = load_data()
 
+# Map coded labels to full descriptions for display
+model_mapping = {
+    '4WD/4X4': 'Four-wheel drive',
+    'AWD': 'All-wheel drive',
+    'FFV': 'Flexible-fuel vehicle',
+    'SWB': 'Short wheelbase',
+    'LWB': 'Long wheelbase',
+    'EWB': 'Extended wheelbase'
+}
+
+fuel_mapping = {
+    'X': 'Regular gasoline',
+    'Z': 'Premium gasoline',
+    'D': 'Diesel',
+    'E': 'Ethanol (E85)',
+    'N': 'Natural gas'
+}
+
+def parse_transmission(val):
+    """Expand transmission codes like 'A6', 'AM7' into human-readable text.
+
+    Examples:
+    - 'A6' -> 'Automatic, 6 gears'
+    - 'AM7' -> 'Automated manual, 7 gears'
+    - 'AV' -> 'Continuously variable'
+    """
+    if val is None:
+        return val
+    s = str(val)
+    # Map known prefixes (check longer keys first)
+    prefix_map = {
+        'AM': 'Automated manual',
+        'AS': 'Automatic with select shift',
+        'AV': 'Continuously variable',
+        'A': 'Automatic',
+        'M': 'Manual'
+    }
+    for prefix in sorted(prefix_map.keys(), key=lambda x: -len(x)):
+        if s.startswith(prefix):
+            desc = prefix_map[prefix]
+            # extract number of gears if present
+            import re
+            m = re.search(r"(\d+)", s)
+            if m:
+                return f"{desc}, {m.group(1)} gears"
+            return desc
+    # If no known prefix but contains a number, show as gears
+    import re
+    m = re.search(r"(\d+)", s)
+    if m:
+        return f"{m.group(1)} gears"
+    return s
+
+# Apply mappings to the loaded dataframe (only if those columns exist)
+if 'Model' in df.columns:
+    df['Model'] = df['Model'].replace(model_mapping)
+
+if 'Transmission' in df.columns:
+    df['Transmission'] = df['Transmission'].apply(parse_transmission)
+
+if 'Fuel_Type' in df.columns:
+    # Map known fuel codes; leave others unchanged
+    df['Fuel_Type'] = df['Fuel_Type'].map(fuel_mapping).fillna(df['Fuel_Type'])
+
 # Display dataset info
 with st.expander("ℹ️ Dataset Information"):
     col1, col2, col3 = st.columns(3)
